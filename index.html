@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Monthsary! | f(t)</title>
+    <!-- Importing a clean Math-styled serif font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cambria&family=Lora:ital,wght@0,400;0,700;1,400&display=swap">
+    <style>
+        body {
+            background-color: #fcfbf9;
+            color: #2c2a29;
+            font-family: 'Lora', 'Cambria', serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e6e1da;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: #b83b5e;
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: #7a7571;
+            margin-bottom: 25px;
+        }
+
+        canvas {
+            background: #faf8f5;
+            border: 1px dashed #d3cdc5;
+            border-radius: 8px;
+            max-width: 100%;
+        }
+
+        .proof-box {
+            text-align: left;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f7f5f0;
+            border-left: 4px solid #b83b5e;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .theorem-title {
+            font-weight: bold;
+            color: #b83b5e;
+            margin-bottom: 8px;
+        }
+
+        .qed-btn {
+            margin-top: 25px;
+            background-color: #b83b5e;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .qed-btn:hover {
+            background-color: #962d4a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Happy Monthsary, Love!</h1>
+    <div class="subtitle">Evaluating the function of us over time...</div>
+
+    <!-- The Coordinate Grid Plane -->
+    <canvas id="heartCanvas" width="400" height="400"></canvas>
+
+    <!-- The LaTeX / Math Proof presentation -->
+    <div class="proof-box">
+        <div class="theorem-title">Theorem: Our bond is continuous, non-decreasing, and strictly divergent to infinity.</div>
+        <strong>Given:</strong> A non-empty set of shared moments $M$ accumulated over our relationship domain.<br><br>
+        <strong>Proof (By Induction):</strong><br>
+        1. <em>Base Case:</em> At Month 1, local initialization showed extreme compatibility indicators.<br>
+        2. <em>Inductive Step:</em> Assume at Month $k$, our connection is stronger than ever. It follows mathematically that at Month $k+1$, through deep conversations and shared laughter, the delta remains strictly positive ($\Delta > 0$).<br><br>
+        Therefore, our connection is monotonically increasing across all real numbers.
+    </div>
+
+    <button class="qed-btn" onclick="celebrate()">Click to Complete Proof (Q.E.D.)</button>
+</div>
+
+<!-- Canvas Confetti Library CDN link for the explosion effect -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // Scale mapping to fit our parametric equation coordinates nicely inside the 400x400 grid
+    const scale = 11; 
+    const centerX = width / 2;
+    const centerY = height / 2 - 20; // Shift slightly up to center the heart weight
+
+    // 1. Draw the clean math grid lines
+    function drawGrid() {
+        ctx.strokeStyle = '#eae6df';
+        ctx.lineWidth = 1;
+        
+        // Vertical grid lines
+        for(let x = 0; x <= width; x += 40) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.stroke();
+        }
+        // Horizontal grid lines
+        for(let y = 0; y <= height; y += 40) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
+        }
+
+        // Main X and Y Axes
+        ctx.strokeStyle = '#cdc5b9';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, centerY); ctx.lineTo(width, centerY); // X axis
+        ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height); // Y axis
+        ctx.stroke();
+    }
+
+    // 2. Plot the Parametric Equation incrementally
+    let t = 0;
+    const speed = 0.03; // Speed of graphing draw line
+
+    function drawHeartAnimation() {
+        if (t == 0) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#b83b5e';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+        }
+
+        // Parametric equations for a true heart curve
+        // x = 16 * sin^3(t)
+        // y = 13 * cos(t) - 5 * cos(2t) - 2 * cos(3t) - cos(4t)
+        let xVal = 16 * Math.pow(Math.sin(t), 3);
+        let yVal = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+
+        // Map math coordinates to canvas pixels (Note: Canvas Y-axis goes downwards, so invert yVal)
+        let canvasX = centerX + xVal * scale;
+        let canvasY = centerY - yVal * scale;
+
+        if (t === 0) {
+            ctx.moveTo(canvasX, canvasY);
+        } else {
+            ctx.lineTo(canvasX, canvasY);
+            ctx.stroke();
+        }
+
+        t += speed;
+
+        if (t <= 2 * Math.PI + speed) {
+            requestAnimationFrame(drawHeartAnimation);
+        } else {
+            // Fill the inside faintly once plotting completes
+            ctx.fillStyle = 'rgba(184, 59, 94, 0.08)';
+            ctx.fill();
+        }
+    }
+
+    // Initialize the canvas view
+    drawGrid();
+    // Tiny delay before drawing line for cinematic effect
+    setTimeout(drawHeartAnimation, 800);
+
+    // QED Button Explosion Action
+    function celebrate() {
+        // Red and pink hearts/confetti explosion
+        confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ['#b83b5e', '#ff7171', '#ffb4b4']
+        });
+    }
+</script>
+
+</body>
+</html>
