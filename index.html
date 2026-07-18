@@ -3,208 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Monthsary! | f(t)</title>
-    <!-- Importing a clean Math-styled serif font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cambria&family=Lora:ital,wght@0,400;0,700;1,400&display=swap">
+    <title>Our Mathematical Domain</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap">
     <style>
-        body {
-            background-color: #fcfbf9;
-            color: #2c2a29;
-            font-family: 'Lora', 'Cambria', serif;
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Fira Code', monospace;
+            overflow: hidden;
+        }
+
+        /* Persistent Background Canvas */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* UI Overlays */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 600px;
-            text-align: center;
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border: 1px solid #e6e1da;
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 5px;
-            color: #b83b5e;
-        }
-
-        .subtitle {
-            font-style: italic;
-            color: #7a7571;
-            margin-bottom: 25px;
-        }
-
-        canvas {
-            background: #faf8f5;
-            border: 1px dashed #d3cdc5;
-            border-radius: 8px;
-            max-width: 100%;
-        }
-
-        .proof-box {
-            text-align: left;
-            margin-top: 30px;
             padding: 20px;
-            background-color: #f7f5f0;
-            border-left: 4px solid #b83b5e;
-            font-size: 0.95rem;
-            line-height: 1.6;
         }
 
-        .theorem-title {
-            font-weight: bold;
-            color: #b83b5e;
-            margin-bottom: 8px;
+        /* Card Styles */
+        .card {
+            background: rgba(15, 15, 15, 0.85);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 100, 0.05);
+            backdrop-filter: blur(8px);
+            transition: opacity 1s ease, transform 1s ease;
         }
 
-        .qed-btn {
-            margin-top: 25px;
-            background-color: #b83b5e;
-            color: white;
-            border: none;
-            padding: 12px 30px;
+        h2 {
+            font-size: 1.4rem;
+            color: #00ff66;
+            margin-top: 0;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #444;
+            color: #ddd;
+            padding: 14px;
             font-family: inherit;
             font-size: 1rem;
-            font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            text-align: left;
         }
 
-        .qed-btn:hover {
-            background-color: #962d4a;
+        .option-btn:hover {
+            background: rgba(0, 255, 100, 0.1);
+            border-color: #00ff66;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        /* Hidden State */
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        /* Letter Container styling */
+        .letter-card {
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: left;
+            font-family: 'Lora', serif;
+            line-height: 1.7;
+            padding: 40px;
+            border-color: #555;
+            box-shadow: 0 0 40px rgba(255, 100, 100, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+        }
+
+        .letter-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .letter-text {
+            font-size: 1.05rem;
+            color: #f0f0f0;
+            white-space: pre-line;
+        }
+
+        .letter-header {
+            font-family: 'Fira Code', monospace;
+            color: #ff4a70;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 10px;
+        }
+
+        /* Custom Scrollbar for Letter */
+        .letter-card::-webkit-scrollbar {
+            width: 6px;
+        }
+        .letter-card::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Happy Monthsary, Love!</h1>
-    <div class="subtitle">Evaluating the function of us over time...</div>
+    <canvas id="canvas"></canvas>
 
-    <!-- The Coordinate Grid Plane -->
-    <canvas id="heartCanvas" width="400" height="400"></canvas>
-
-    <!-- The LaTeX / Math Proof presentation -->
-    <div class="proof-box">
-        <div class="theorem-title">Theorem: Our bond is continuous, non-decreasing, and strictly divergent to infinity.</div>
-        <strong>Given:</strong> A non-empty set of shared moments $M$ accumulated over our relationship domain.<br><br>
-        <strong>Proof (By Induction):</strong><br>
-        1. <em>Base Case:</em> At Month 1, local initialization showed extreme compatibility indicators.<br>
-        2. <em>Inductive Step:</em> Assume at Month $k$, our connection is stronger than ever. It follows mathematically that at Month $k+1$, through deep conversations and shared laughter, the delta remains strictly positive ($\Delta > 0$).<br><br>
-        Therefore, our connection is monotonically increasing across all real numbers.
+    <!-- Phase 1: The Math Problem Quiz Screen -->
+    <div class="overlay" id="quizOverlay">
+        <div class="card" id="quizCard">
+            <h2>[PROBLEM]: Solve for our current temporal vector duration ($t$) given that our base initialization occurred 26 months ago.</h2>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(false)">A) 2 years and 1 month</button>
+                <button class="option-btn" onclick="checkAnswer(true)">B) 2 years and 2 months</button>
+                <button class="option-btn" onclick="checkAnswer(false)">C) 1 year and 14 months</button>
+                <button class="option-btn" onclick="checkAnswer(false)">D) $\lim_{t \to \infty} (t)$</button>
+            </div>
+        </div>
     </div>
 
-    <button class="qed-btn" onclick="celebrate()">Click to Complete Proof (Q.E.D.)</button>
-</div>
+    <!-- Phase 2 & 3: The Letter Presentation (Initially hidden) -->
+    <div class="overlay">
+        <div class="card letter-card" id="letterCard">
+            <div class="letter-header">Q.E.D. | Verification Successful</div>
+            <div class="letter-text">Happy Monthsary Baby I worked hard for this concept kaya akonag learn sa github. Ngayon 2 years and 2 months natayo we're really old, but i am forever thankful that u came into my life and so very proud of u even on the hardest days. Throughout sa 2 years and 2 months natin marami tayo napagdaanang aways and bati and mga tampuhan and our sweetest moments at marami pang iba which made me love u more.
 
-<!-- Canvas Confetti Library CDN link for the explosion effect -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+Thankyou bb for always being there for me and for making me feel loved even though sometimes suplado ako sayo alam ko man d tayo perfect couple but i will still choose u everyday no matter what problems masalapay nato(😂) and i hope we will continue to grow as a couple and makamit natin mga gusto natin sa buhay.
 
-<script>
-    const canvas = document.getElementById('heartCanvas');
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
-    
-    // Scale mapping to fit our parametric equation coordinates nicely inside the 400x400 grid
-    const scale = 11; 
-    const centerX = width / 2;
-    const centerY = height / 2 - 20; // Shift slightly up to center the heart weight
+Happy 2 years and 2 months Baby!</div>
+        </div>
+    </div>
 
-    // 1. Draw the clean math grid lines
-    function drawGrid() {
-        ctx.strokeStyle = '#eae6df';
-        ctx.lineWidth = 1;
-        
-        // Vertical grid lines
-        for(let x = 0; x <= width; x += 40) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, height);
-            ctx.stroke();
-        }
-        // Horizontal grid lines
-        for(let y = 0; y <= height; y += 40) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(width, y);
-            ctx.stroke();
-        }
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
 
-        // Main X and Y Axes
-        ctx.strokeStyle = '#cdc5b9';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, centerY); ctx.lineTo(width, centerY); // X axis
-        ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height); // Y axis
-        ctx.stroke();
-    }
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
 
-    // 2. Plot the Parametric Equation incrementally
-    let t = 0;
-    const speed = 0.03; // Speed of graphing draw line
-
-    function drawHeartAnimation() {
-        if (t == 0) {
-            ctx.beginPath();
-            ctx.strokeStyle = '#b83b5e';
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-        }
-
-        // Parametric equations for a true heart curve
-        // x = 16 * sin^3(t)
-        // y = 13 * cos(t) - 5 * cos(2t) - 2 * cos(3t) - cos(4t)
-        let xVal = 16 * Math.pow(Math.sin(t), 3);
-        let yVal = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-
-        // Map math coordinates to canvas pixels (Note: Canvas Y-axis goes downwards, so invert yVal)
-        let canvasX = centerX + xVal * scale;
-        let canvasY = centerY - yVal * scale;
-
-        if (t === 0) {
-            ctx.moveTo(canvasX, canvasY);
-        } else {
-            ctx.lineTo(canvasX, canvasY);
-            ctx.stroke();
-        }
-
-        t += speed;
-
-        if (t <= 2 * Math.PI + speed) {
-            requestAnimationFrame(drawHeartAnimation);
-        } else {
-            // Fill the inside faintly once plotting completes
-            ctx.fillStyle = 'rgba(184, 59, 94, 0.08)';
-            ctx.fill();
-        }
-    }
-
-    // Initialize the canvas view
-    drawGrid();
-    // Tiny delay before drawing line for cinematic effect
-    setTimeout(drawHeartAnimation, 800);
-
-    // QED Button Explosion Action
-    function celebrate() {
-        // Red and pink hearts/confetti explosion
-        confetti({
-            particleCount: 150,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#b83b5e', '#ff7171', '#ffb4b4']
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         });
-    }
-</script>
 
+        // App States: 'quiz', 'faceAnimation', 'floatingMath'
+        let currentState = 'quiz';
+        let stateStartTime = 0;
+
+        const mathSymbols = ['2', 'm', 'y', 'x', 'f(x)', '∫', 'π', '∑', '√', 'λ', 'θ', 'dy/dx', '∞', '7', '12', 'e'];
+        
+        // Particle Engine Arrays
+        let particles = [];
+        let geometryItems = [];
+
+        // Generate Target Facial Silhouette Matrix Points (Procedural mapping of your photo silhouette)
+        function generateFaceTargets() {
+            let targets = [];
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // Generate Left Face (Her Face, featuring bangs outline & softer jaw)
+            const leftFaceCenterX = centerX - 140;
+            const leftFaceCenterY = centerY;
+            
+            // Head/Hair contour
+            for(let i=0; i<180; i+=4) {
+                let rad = (i * Math.PI) / 180;
+                let r = 110 + Math.sin(rad * 5) * 5; 
+                targets.push({x: leftFaceCenterX + Math.cos(rad - Math.PI)*r, y: leftFaceCenterY + Math.sin(rad - Math.PI)*r * 1.2});
+            }
+            // Bangs line
+            for(let x = -80; x <= 80; x += 6) {
+                targets.push({x: leftFaceCenterX + x, y: leftFaceCenterY - 80 + (x*x)/1500});
+            }
+            // Eyes & Lips markers
+            targets.push({x: leftFaceCenterX - 30, y: leftFaceCenterY - 20}, {x: leftFaceCenterX + 30, y: leftFaceCenterY - 20});
+            for(let x = -25; x <= 25; x += 5) {
+                targets.push({x: leftFaceCenterX + x, y: leftFaceCenterY + 40 + (x*x)/300}); // Smile
+            }
+
+            // Generate Right Face (Your Face, slightly broader & structured)
+            const rightFaceCenterX = centerX + 140;
+            const rightFaceCenterY = centerY + 20;
+
+            // Head/Hair contour
+            for(let i=0; i<180; i+=4) {
+                let rad = (i * Math.PI) / 180;
+                let r = 125;
+                targets.push({x: rightFaceCenterX + Math.cos(rad - Math.PI*1.1)*r * 1.05, y: rightFaceCenterY + Math.sin(rad - Math.PI*1.1)*r * 1.25});
+            }
+            // Hair swoop top
+            for(let x = -90; x <= 90; x += 6) {
+                targets.push({x: rightFaceCenterX + x, y: rightFaceCenterY - 110 - Math.sin(x/30)*15});
+            }
+            // Eyes, brow, mouth markers
+            targets.push({x: rightFaceCenterX - 35, y: rightFaceCenterY - 15}, {x: rightFaceCenterX + 35, y: rightFaceCenterY - 15});
+            for(let x = -30; x <= 30; x += 5) {
+                targets.push({x: rightFaceCenterX + x, y: rightFaceCenterY + 45 - (x*x)/500});
+            }
+
+            return targets;
+        }
+
+        // Initialize particles
+        function initFaceParticles() {
+            const targets = generateFaceTargets();
+            particles = [];
+            
+            targets.forEach((target) => {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    targetX: target.x,
+                    targetY: target.y,
+                    char: mathSymbols[Math.floor(Math.random() * mathSymbols.length)],
+                    size: Math.floor(Math.random() * 6) + 10,
+                    alpha: 0,
+                    speed: 0.03 + Math.random() * 0.04
+                });
+            });
+        }
+
+        // Initialize Floating Geometry Backdrop (Reference 3 & 4 style)
+        function initFloatingGeometry() {
+            geometryItems = [];
+            // Create geometric equations and line items
+            for(let i = 0; i < 25; i++) {
+                geometryItems.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    type: Math.random() > 0.5 ? 'equation' : 'shape',
+                    text: mathSymbols[Math.floor(Math.random() * mathSymbols.length)] + " = " + Math.floor(Math.random()*100) + "π",
+                    shapeType: Math.floor(Math.random() * 3), // 0: triangle, 1: cube frame, 2: circles
+                    size: Math.random() * 60 + 40,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    rot: Math.random() * Math.PI,
+                    rotSpeed: (Math.random() - 0.5) * 0.01
+                });
+            }
+        }
+
+        // Base Grid Render
+        function drawMathGrid() {
+            ctx.strokeStyle = 'rgba(40, 40, 40, 0.8)';
+            ctx.lineWidth = 1;
+            const gridSize = 50;
+
+            // Draw lines
+            for (let x = 0; x < width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Accent coordinate crosshairs
+            ctx.strokeStyle = 'rgba(0, 255, 100, 0.15)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(width/2, 0); ctx.lineTo(width/2, height);
+            ctx.moveTo(0, height/2); ctx.lineTo(width, height/2);
+            ctx.stroke();
+        }
+
+        // Main Animation Engine Loop
+        function loop(timestamp) {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, width, height);
+
+            drawMathGrid();
+
+            if (currentState === 'faceAnimation') {
+                let elapsed = timestamp - stateStartTime;
+                
+                particles.forEach(p => {
+                    // Linear interpolation towards face target coordinates
+                    p.x += (p.targetX - p.x) * p.speed;
+                    p.y += (p.targetY - p.y) * p.speed;
+                    if(p.alpha < 1) p.alpha += 0.02;
+
+                    ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                    ctx.font = `${p.size}px 'Fira Code', monospace`;
+                    ctx.fillText(p.char, p.x, p.y);
+                });
+
+                // Auto transition to floating geometry after 5 seconds (5000ms)
+                if (elapsed >= 5000) {
+                    currentState = 'floatingMath';
+                    initFloatingGeometry();
+                    document.getElementById('letterCard').classList.add('visible');
+                }
+            } 
+            else if (currentState === 'floatingMath') {
+                // Background Floating Mathematical Items active
+                geometryItems.forEach(item => {
+                    item.x += item.vx;
+                    item.y += item.vy;
+                    item.rot += item.rotSpeed;
+
+                    // Screen wrap limits
+                    if (item.x < -100) item.x = width + 100;
+                    if (item.x > width + 100) item.x = -100;
+                    if (item.y < -100) item.y = height + 100;
+                    if (item.y > height + 100) item.y = -100;
+
+                    ctx.save();
+                    ctx.translate(item.x, item.y);
+                    ctx.rotate(item.rot);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+                    ctx.font = '14px "Fira Code"';
+                    ctx.lineWidth = 1;
+
+                    if (item.type === 'equation') {
+                        ctx.fillText(item.text, 0, 0);
+                    } else {
+                        ctx.beginPath();
+                        if (item.shapeType === 0) { // Matrix Triangle
+                            ctx.moveTo(0, -item.size/2);
+                            ctx.lineTo(item.size/2, item.size/2);
+                            ctx.lineTo(-item.size/2, item.size/2);
+                            ctx.closePath();
+                        } else if (item.shapeType === 1) { // Orthogonal square box
+                            ctx.strokeRect(-item.size/2, -item.size/2, item.size, item.size);
+                        } else { // Concentric coordinate circles
+                            ctx.arc(0, 0, item.size/2, 0, Math.PI*2);
+                        }
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+                });
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        // Quiz Submission Action
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                // Clear the layout container
+                document.getElementById('quizCard').classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('quizOverlay').style.display = 'none';
+                }, 1000);
+
+                // Initialize Face assembly coordinates mapping
+                initFaceParticles();
+                stateStartTime = performance.now();
+                currentState = 'faceAnimation';
+            } else {
+                alert("Incorrect matrix values! Hint: Count the months since your milestone carefully. 😉");
+            }
+        }
+
+        // Kickstart the renderer
+        requestAnimationFrame(loop);
+    </script>
 </body>
 </html>
